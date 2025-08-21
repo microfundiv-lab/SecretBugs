@@ -61,7 +61,7 @@ cog.colors = c(cog.colors, "grey50")
 names(cog.colors) = c(keep.cogs, "Other")
 
 # plot gene freq vs effect size
-gene.plot = ggplot(merged.filt, aes(x=log(N_genomes), y=Estimate, colour=Description)) +
+gene.plot = ggplot(merged.filt, aes(x=log(N_genomes_hq), y=Estimate, colour=Description)) +
   geom_point(size=2) +
   theme_classic() +
   ylab("log(Odds Ratio)") +
