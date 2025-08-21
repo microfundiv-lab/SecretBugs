@@ -28,7 +28,7 @@ The `scripts/` folder contains R scripts that were used to process downstream re
 * [ml_summary_pairwise.R](scripts/ml_summary_pairwise.R)
 * [ml_summary_pool-study.R](scripts/ml_summary_pool-study.R)
 
-### Meta-analysis
+### Meta-analysis across disease
 * [disease_gen-overlap.R](scripts/disease_gen-overlap.R)
 * [disease_process-overlap.R](scripts/disease_process-overlap.R)
 * [disease_prop_cult.R](scripts/disease_prop_cult.R)
