@@ -31,7 +31,7 @@ The `scripts/` folder contains R scripts that were used to process downstream re
 * [aldex2.R](scripts/aldex2.R)
 * [disease_gen-overlap.R](scripts/disease_gen-overlap.R)
 
-### Meta-analysis across disease
+### Meta-analysis across diseases
 * [disease_process-overlap.R](scripts/disease_process-overlap.R)
 * [disease_prop_cult.R](scripts/disease_prop_cult.R)
 * [disease_summarize_genera.R](scripts/disease_summarize_genera.R)
