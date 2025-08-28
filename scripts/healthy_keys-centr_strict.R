@@ -4,7 +4,6 @@ library(ggpubr)
 
 # load data
 setwd("~/OneDrive - University of Cambridge/MFD_shared/Projects/2023_AnaSilva_SecretBugs/data/healthy_analysis/")
-key.ori = read.delim("keystone_mean.tsv")
 key.data1 = read.delim("keystone_mean_corr01.tsv")
 key.data2 = read.delim("keystone_mean_corr02.tsv")
 
