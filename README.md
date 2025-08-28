@@ -43,6 +43,7 @@ The `scripts/` folder contains R scripts that were used to process downstream re
 
 ### Ecological modelling in health
 * [healthy_keys-centr.R](scripts/healthy_keys-centr.R)
+* [healthy_keys-centr_strict.R](scripts/healthy_keys-centr_strict.R)
 * [healthy_mean-prev.R](scripts/healthy_mean-prev.R)
 * [healthy_prev-keys_corr.R](scripts/healthy_prev-keys_corr.R)
 * [healthy_prev-keys_heatmaps.R](scripts/healthy_prev-keys_heatmaps.R)

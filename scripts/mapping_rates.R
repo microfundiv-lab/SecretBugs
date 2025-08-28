@@ -157,12 +157,25 @@ uncult.plot = ggarrange(uncult.species, uncult.abund, ncol=2, common.legend = TR
   theme(plot.margin = margin(0.2,0.2,0.2,0.2, "cm"))
 
 # perform Wilcoxon test for each disease
-wilcox.df = all.data %>%
+all.data$Species_norm = all.data$Species_uncultured/all.data$Species_total*100
+all.data$Mapping_norm = all.data$Mapping_uncultured/all.data$Mapping_filt*100
+
+wilcox.spec = all.data %>%
   group_by(Disease) %>%
   summarise(
     wilcox_p = tryCatch({
-      wilcox.test(Species_uncultured ~ Health.state)$p.value
+      wilcox.test(Species_norm ~ Health.state)$p.value
     }, error = function(e) NA)
   )
-wilcox.df$FDR = p.adjust(wilcox.df$wilcox_p)
-wilcox.df = wilcox.df[which(wilcox.df$FDR < 0.05),]
+wilcox.spec$FDR = p.adjust(wilcox.spec$wilcox_p)
+wilcox.spec = wilcox.spec[which(wilcox.spec$FDR < 0.05),]
+
+wilcox.abund = all.data %>%
+  group_by(Disease) %>%
+  summarise(
+    wilcox_p = tryCatch({
+      wilcox.test(Mapping_norm ~ Health.state)$p.value
+    }, error = function(e) NA)
+  )
+wilcox.abund$FDR = p.adjust(wilcox.abund$wilcox_p)
+wilcox.abund = wilcox.abund[which(wilcox.abund$FDR < 0.05),]
