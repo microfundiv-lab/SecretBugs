@@ -42,7 +42,7 @@ selected.genomes = intersect(colnames(keggor.matrix), rownames(genome.oscillo))
 genome.oscillo   = genome.oscillo[selected.genomes, , drop = FALSE]
 keggor.matrix    = keggor.matrix[, selected.genomes, drop = FALSE]
 
-# keep KO features present in >10% of genomes and binarize
+# keep KO features present in >1% of genomes and binarize
 keggor.matrix = t(keggor.matrix[rowSums(keggor.matrix > 0) > ncol(keggor.matrix) * 0.01, , drop = FALSE])
 keggor.matrix[keggor.matrix > 0] = 1L
 storage.mode(keggor.matrix) = "integer"
