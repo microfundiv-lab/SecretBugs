@@ -19,7 +19,7 @@ for (n in 1:nrow(tax.df)){
     if(!grepl("__$", tax.df[n,r])){
       tax.df[n,"Taxon"] = tax.df[n,r] }}}
 
-get_keystone = function(continent){
+get_central = function(continent){
   
   # read fastspar data
   cat(paste0("Running function for ", continent,"\n"))
@@ -45,26 +45,26 @@ get_keystone = function(continent){
     # construct graph
     d.dist = graph.data.frame(d, directed=FALSE)
     E(d.dist)$weight = 1-abs(E(d.dist)$correlation)
-    keystone.df = data.frame(matrix(0, ncol=3, nrow=length(V(d.dist))))
-    colnames(keystone.df) = c("betweenness", "closeness", "degree")
-    rownames(keystone.df) = names(V(d.dist))
-    keystone.df$species = names(V(d.dist))
-    keystone.df$betweenness = -betweenness(d.dist)
-    keystone.df$rscl_btwn = rescale(keystone.df$betweenness)
-    keystone.df$closeness = closeness(d.dist)
-    keystone.df$rscl_clsn = rescale(keystone.df$closeness)
-    keystone.df$degree = degree(d.dist)
-    keystone.df$rscl_degree = rescale(keystone.df$degree)
-    keystone.df$mean_centrality = rowMeans(keystone.df[,c("rscl_btwn", "rscl_clsn", "rscl_degree")])
-    keystone.df$continent = continent
-    return(keystone.df)
+    central.df = data.frame(matrix(0, ncol=3, nrow=length(V(d.dist))))
+    colnames(central.df) = c("betweenness", "closeness", "degree")
+    rownames(central.df) = names(V(d.dist))
+    central.df$species = names(V(d.dist))
+    central.df$betweenness = -betweenness(d.dist)
+    central.df$rscl_btwn = rescale(central.df$betweenness)
+    central.df$closeness = closeness(d.dist)
+    central.df$rscl_clsn = rescale(central.df$closeness)
+    central.df$degree = degree(d.dist)
+    central.df$rscl_degree = rescale(central.df$degree)
+    central.df$mean_centrality = rowMeans(central.df[,c("rscl_btwn", "rscl_clsn", "rscl_degree")])
+    central.df$continent = continent
+    return(central.df)
   } else { return(NULL)
   }
 }
 
 # run function per continent
 continents = c("Africa", "Asia", "Europe", "North_America", "South_America")
-results.list = lapply(continents, function(x) { get_keystone(x) })
+results.list = lapply(continents, function(x) { get_central(x) })
 results.df = rbindlist(results.list)
 results.cast = as.data.frame(acast(results.df, species ~ continent, value.var="mean_centrality"))
 results.cast[is.na(results.cast)] = 0
@@ -82,4 +82,4 @@ btwn_degree = cor.test(results.df$rscl_btwn, results.df$rscl_degree, method="spe
 clsn_degree = cor.test(results.df$rscl_clsn, results.df$rscl_degree, method="spearman", exact=FALSE)
 
 # save tables
-write.table(results.agg.tax, file = "../healthy_analysis/keystone_mean_corr02_exp06-corr.tsv", sep="\t", row.names=FALSE, quote=FALSE)
+write.table(results.agg.tax, file = "../healthy_analysis/central_mean_corr02_exp06-corr.tsv", sep="\t", row.names=FALSE, quote=FALSE)

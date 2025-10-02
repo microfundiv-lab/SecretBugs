@@ -11,7 +11,7 @@ library(ggpubr)
 setwd("~/OneDrive - University of Cambridge/MFD_shared/Projects/2023_AnaSilva_SecretBugs/data/ml_analysis/all_diseases_pairwise/")
 
 # load performance data
-input.files =  list.files(pattern = "results.csv", recursive = TRUE, full.names=TRUE)
+input.files =  list.files(pattern = "results.csv", recursive = FALSE, full.names=TRUE)
 pf.list = lapply(input.files, function(i) {
   filename = strsplit(i, "/")[[1]][2]
   disease1 = strsplit(filename, "_")[[1]][1]

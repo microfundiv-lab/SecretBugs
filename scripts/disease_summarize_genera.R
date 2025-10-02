@@ -50,7 +50,7 @@ scatter = ggplot(genus.health, aes(x=Prop_uncult, y=Norm_ES, colour=N_class)) +
   theme_classic() +
   ylab("Normalized Effect Size") +
   xlab("% Uncultured species") +
-  scale_colour_manual(values=c("steelblue", "darkgreen", "tomato", "purple"), name="Number of biomarkers") +
+  scale_colour_manual(values=c("steelblue", "darkgreen", "tomato", "purple"), name="Number of species") +
   theme(legend.text = element_text(size=10)) +
   theme(legend.title = element_text(size=12)) +
   theme(legend.position = "inside") +
@@ -75,7 +75,7 @@ lolli = ggplot(genus.health[1:25,], aes(x=reorder(Genus, UHS), y=UHS, fill=Famil
   theme(axis.title.x = element_text(size=14)) +
   theme(axis.text.y = element_text(size=12))
 
-genus.plot = ggarrange(scatter, lolli, align="h", widths=c(0.8,1), labels=c("a", "b"), font.label=list(size=18))
+genus.plot = ggarrange(scatter, lolli, align="h", widths=c(0.8,1), labels=c("A", "B"), font.label=list(size=18))
 
 # plot cag-170 species
 source("../../scripts/alex/cag17_prev-abund.R")
@@ -105,7 +105,7 @@ cag170.heat = ggplot(cag170.melt, aes(y = Genome, x = variable, fill = value)) +
 cag170.plot = ggarrange(cag170.heat, prev.plot, abund.plot, ncol=3, widths=c(1,0.3,0.4), align="h")
 
 # combine final plots
-ggarrange(genus.plot, cag170.plot, ncol=1, labels=c("", "c"), heights=c(0.8,1), font.label=list(size=18))
+ggarrange(genus.plot, cag170.plot, ncol=1, labels=c("", "C"), heights=c(0.8,1), font.label=list(size=18))
 ggsave(file="figures/cag170_stats.pdf", height=12, width=12)
 
 # save table

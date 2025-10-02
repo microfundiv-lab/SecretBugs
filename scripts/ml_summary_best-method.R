@@ -84,5 +84,5 @@ ml.heat = ggplot(pf.agg.uncult, aes(y=Disease, x=method, fill=AUC)) +
         axis.title = element_blank())
 
 # combine plots
-ggarrange(ml.box, ml.heat, widths=c(0.5,1), labels=c("a", "b"), font.label = list(size=18))
+ggarrange(ml.box, ml.heat, widths=c(0.5,1), labels=c("A", "B"), font.label = list(size=18))
 ggsave(file="../../figures/ml_summary_best-method.pdf", width=10, height=6)

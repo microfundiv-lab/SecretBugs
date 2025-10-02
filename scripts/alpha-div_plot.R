@@ -98,7 +98,7 @@ div.box = ggplot(div_uncultured, aes(x=reorder(Label, -Shannon), y = Shannon, fi
   theme(legend.title= element_text(size=16))
 
 # combine plots
-ggarrange(div.box, div.scatter, ncol=2, common.legend=TRUE, widths=c(1,0.8), align="h", labels=c("a", "b"), font.label=list(size=22), legend = "bottom")
+ggarrange(div.box, div.scatter, ncol=2, common.legend=TRUE, widths=c(1,0.8), align="h", labels=c("A", "B"), font.label=list(size=22), legend = "bottom")
 ggsave(file="figures/alpha_diversity.pdf", height=8, width=13)
 
 # perform stats tests
@@ -109,22 +109,21 @@ alpha_sign = function(div.combined) {
     sub_data = div.combined[div.combined$Disease == x, ]
     studies = length(unique(sub_data$Study))
     subjects = max(table(sub_data$Subject))
-    sub_data$Shannon_rank = rank(sub_data$Shannon)
     
     if (subjects > 1) {
       # Use mixed-effects model with Subject as a random effect
       if (studies > 1) {
-        model = lmer(Shannon_rank ~ Variable + Study + log10(Read.count) + (1 | Subject), data = sub_data)
+        model = lmer(Shannon ~ Variable + Study + log10(Read.count) + (1 | Subject), data = sub_data)
       } else {
-        model = lmer(Shannon_rank ~ Variable + log10(Read.count) + (1 | Subject), data = sub_data)
+        model = lmer(Shannon ~ Variable + log10(Read.count) + (1 | Subject), data = sub_data)
       }
       p_val = summary(model)$coefficients["VariableDiseased", "Pr(>|t|)"]
     } else {
       # Use linear model without random effect
       if (studies > 1) {
-        model = lm(Shannon_rank ~ Variable + Study + log10(Read.count), data = sub_data)
+        model = lm(Shannon ~ Variable + Study + log10(Read.count), data = sub_data)
       } else {
-        model = lm(Shannon_rank ~ Variable + log10(Read.count), data = sub_data)
+        model = lm(Shannon ~ Variable + log10(Read.count), data = sub_data)
       }
       p_val = summary(model)$coefficients["VariableDiseased", "Pr(>|t|)"]
     }
@@ -135,11 +134,18 @@ alpha_sign = function(div.combined) {
   # Format results
   disease.test = data.frame(t(data.frame(disease.test)))
   rownames(disease.test) = unique(div.combined$Disease)
-  disease.test$FDR = p.adjust(disease.test[,1])
+  disease.test$FDR = p.adjust(disease.test[,1], method="fdr")
   disease.test$Sign = ifelse(disease.test$FDR < 0.05, "Significant", "NS")
   return(disease.test)
 }
 
-sign_both = alpha_sign(div_both)
-sign_cultured = alpha_sign(div_cultured)
-sign_uncultured = alpha_sign(div_uncultured)
+sign_cult_counts = alpha_sign(div_cultured)
+sign_uncult_counts = alpha_sign(div_uncultured)
+
+# combine with rescaling results
+source("../scripts/alex/alpha-div_rscl.R")
+alpha.div.fi = data.frame(cbind(rownames(sign_cult_counts), sign_cult_counts$FDR, sign_cult_relab$FDR, sign_cult_relab_rscl$FDR,
+                                sign_uncult_counts$FDR, sign_uncult_relab$FDR, sign_uncult_relab_rscl$FDR))
+
+colnames(alpha.div.fi) = c("Disease", "Cultured_counts", "Cult_relab", "Cult_relab_rscl", "Uncultured_counts", "Uncult_relab", "Uncult_relab_rscl")
+write.table(alpha.div.fi, file = "tables/supptable_alphadiv.tsv", sep="\t", row.names=FALSE, quote=FALSE)

@@ -8,7 +8,7 @@ library(RColorBrewer)
 setwd("~/OneDrive - University of Cambridge/MFD_shared/Projects/2023_AnaSilva_SecretBugs/data/")
 
 # load da data
-da.results = read.csv("overlap/species_ds.csv")
+da.results = read.csv("meta-analysis/species_ds.csv")
 da.sign = da.results[da.results$DS != 0,]
 da.sign$Classification = ifelse(da.sign$DS > 0, "Disease", "Health")
 da.status = as.data.frame(as.matrix(table(da.sign[,c("Classification", "Status")])))

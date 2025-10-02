@@ -98,4 +98,4 @@ dysb.boxplot = ggplot(corr.plot, aes(x=Class, y=value, fill=Class)) +
   theme(axis.title.x = element_text(size=14)) +
   theme(axis.text.y = element_text(size=12))
 
-dysb.comb = ggarrange(dysb.scatter, dysb.boxplot, widths=c(2,1), labels=c("a", "b"), font.label = list(size=18))
+dysb.comb = ggarrange(dysb.scatter, dysb.boxplot, widths=c(2,1), labels=c("A", "B"), font.label = list(size=18))

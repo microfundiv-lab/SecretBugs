@@ -19,10 +19,6 @@ metadata = metadata[!is.na(metadata$Disease.name) & !is.na(metadata$Age.group) &
 metadata$Country = gsub("United Republic of Tanzania", "Tanzania", metadata$Country)
 countries = unique(metadata$Country)
 
-# exclude health only samples
-source("../scripts/alex/metadata_disease-numbers.R")
-metadata = metadata[which(metadata$Study %in% studies.all),]
-
 # count metagenomes per country
 ddf = data.frame(matrix(NA, ncol=2, nrow=length(countries)), row.names=countries)
 colnames(ddf) = c("country", "samples")
@@ -57,7 +53,8 @@ map.plot = ggplot(data = world_merged, aes(fill=log10(samples+1))) +
         legend.position = "bottom", legend.text = element_text(size=12), legend.title = element_text(size=14))
 
 # save plot
+source("../scripts/alex/metadata_disease-numbers.R")
 source("../scripts/alex/uhgg_donut.R")
-ggarrange(ggarrange(map.plot, cont.heat, common.legend=TRUE, labels=c("a", "b"), legend = "bottom", font.label = list(size=20)), 
-          ggarrange(meta.plot, donut.plot, widths=c(2.5,1), labels=c("c","d"), font.label = list(size=20)), ncol=1, heights=c(1.5,1))
+ggarrange(ggarrange(map.plot, cont.heat, common.legend=TRUE, labels=c("A", "B"), legend = "bottom", font.label = list(size=20)), 
+          ggarrange(meta.plot, donut.plot, widths=c(2.5,1), labels=c("C","D"), font.label = list(size=20)), ncol=1, heights=c(1.5,1))
 ggsave("figures/metadata_combined.pdf", height = 8, width = 12, dpi = 300, bg="white")

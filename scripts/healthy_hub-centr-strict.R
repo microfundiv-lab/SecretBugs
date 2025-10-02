@@ -4,8 +4,8 @@ library(ggpubr)
 
 # load data
 setwd("~/OneDrive - University of Cambridge/MFD_shared/Projects/2023_AnaSilva_SecretBugs/data/healthy_analysis/")
-key.data1 = read.delim("keystone_mean_corr01.tsv")
-key.data2 = read.delim("keystone_mean_corr02.tsv")
+key.data1 = read.delim("centrality_mean_corr01.tsv")
+key.data2 = read.delim("centrality_mean_corr02.tsv")
 
 # filter for keystone
 key.data1 = key.data1[which(key.data1$mean_centrality > quantile(key.data1$mean_centrality, 0.99, na.rm=TRUE)),]
@@ -59,7 +59,7 @@ heat_bar = function(df, metric, label) {
 }
 
 # run functions and combine
-key.plot1 = heat_bar(key.data1, "mean_centrality", "Keystonness")
-key.plot2 = heat_bar(key.data2, "mean_centrality", "Keystonness")
-ggarrange(key.plot1, key.plot2, nrow=1, widths=c(1,1), labels=c("a", "b"), font.label = list(size=18))
-ggsave(file="../figures/keystonness_strict.pdf", width=13, height=7)
+key.plot1 = heat_bar(key.data1, "mean_centrality", "Centrality")
+key.plot2 = heat_bar(key.data2, "mean_centrality", "Centrality")
+ggarrange(key.plot1, key.plot2, nrow=1, widths=c(1,1), labels=c("A", "B"), font.label = list(size=18))
+ggsave(file="../figures/centrality_strict.pdf", width=13, height=7)

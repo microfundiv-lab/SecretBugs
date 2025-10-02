@@ -82,7 +82,7 @@ lolli = ggplot(genus.health[1:25,], aes(x=reorder(Genus, UHS), y=UHS, fill=Famil
   theme(axis.text.y = element_text(size=12))
 
 # arrange plots
-ggarrange(scatter, lolli, align="h", widths=c(0.8,1), labels=c("a", "b"), font.label=list(size=18))
+ggarrange(scatter, lolli, align="h", widths=c(0.8,1), labels=c("A", "B"), font.label=list(size=18))
 ggsave(file="../figures/cag170_validation.pdf", height=6, width=12)
 
 # save table

@@ -17,6 +17,7 @@ The `scripts/` folder contains R scripts that were used to process downstream re
 
 ### Diversity analysis
 * [alpha-div_plot.R](scripts/alpha-div_plot.R)
+* [alpha-div_rscl.R](scripts/alpha-div_rscl.R)
 * [mapping_rates.R](scripts/mapping_rates.R)
 * [top-prev_uncult.R](scripts/top-prev_uncult.R)
 
@@ -24,7 +25,9 @@ The `scripts/` folder contains R scripts that were used to process downstream re
 * [ml_summary_best-method.R](scripts/ml_summary_best-method.R)
 * [ml_summary_cross-vs-pool.R](scripts/ml_summary_cross-vs-pool.R)
 * [ml_summary_pairwise.R](scripts/ml_summary_pairwise.R)
-* [ml_summary_pool-study.R](scripts/ml_summary_pool-study.R)
+* [ml_summary_pairwise_cult-vs-all.R](scripts/ml_summary_pairwise_cult-vs-all.R)
+* [ml_summary_pool-study_both-vs-cult.R](scripts/ml_summary_pool-study_both-vs-cult.R)
+* [ml_summary_combined.R](scripts/ml_summary_combined.R)
 
 ### Differential abundance
 * [maaslin2.R](scripts/maaslin2.R)
@@ -41,12 +44,13 @@ The `scripts/` folder contains R scripts that were used to process downstream re
 * [upset_health-disease_species.R](scripts/upset_health-disease_species.R)
 * [cag17_prev-abund.R](scripts/cag17_prev-abund.R)
 
-### Ecological modelling in health
-* [healthy_keys-centr.R](scripts/healthy_keys-centr.R)
-* [healthy_keys-centr_strict.R](scripts/healthy_keys-centr_strict.R)
+### Network analysis in health
+* [healthy_hub-centr.R](scripts/healthy_hub-centr.R)
+* [healthy_hub-centr_strict.R](scripts/healthy_hub-centr_strict.R)
+* [healthy_hub-centr_tax-status.R](scripts/healthy_hub-centr_tax-status.R)
 * [healthy_mean-prev.R](scripts/healthy_mean-prev.R)
-* [healthy_prev-keys_corr.R](scripts/healthy_prev-keys_corr.R)
-* [healthy_prev-keys_heatmaps.R](scripts/healthy_prev-keys_heatmaps.R)
+* [healthy_prev-hub_corr.R](scripts/healthy_prev-hub_corr.R)
+* [healthy_prev-hub_heatmaps.R](scripts/healthy_prev-hub_heatmaps.R)
 
 ### Functional comparisons
 * [ko_glmer_oscillo_genomes.R](scripts/ko_glmer_oscillo_genomes.R)

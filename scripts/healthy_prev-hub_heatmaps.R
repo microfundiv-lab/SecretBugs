@@ -6,7 +6,7 @@ library(ggpubr)
 setwd("~/OneDrive - University of Cambridge/MFD_shared/Projects/2023_AnaSilva_SecretBugs/data/healthy_analysis/")
 prev.data = read.delim("prevalence_mean.tsv")
 prev.data = prev.data[which(prev.data$mean_prevalence > 70),]
-key.data = read.delim("keystone_mean.tsv")
+key.data = read.delim("central_mean.tsv")
 key.data = key.data[which(key.data$mean_centrality > quantile(key.data$mean_centrality, 0.99, na.rm=TRUE)),]
 
 # define function
@@ -58,8 +58,8 @@ heat_bar = function(df, metric, label) {
 
 # run functions and combine
 prev.plots = heat_bar(prev.data, "mean_prevalence", "Prevalence (%)")
-key.plots = heat_bar(key.data, "mean_centrality", "Keystonness")
-heat.comb = ggarrange(prev.plots, key.plots, nrow=1, widths=c(1,0.9), labels=c("a", "b"), font.label = list(size=18))
+key.plots = heat_bar(key.data, "mean_centrality", "Centrality")
+heat.comb = ggarrange(prev.plots, key.plots, nrow=1, widths=c(1,0.9), labels=c("A", "B"), font.label = list(size=18))
 
 # combine with correlation
 source("../../scripts/alex/healthy_prev-keys_corr.R")

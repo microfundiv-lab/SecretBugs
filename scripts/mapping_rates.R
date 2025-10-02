@@ -8,6 +8,8 @@ library(tidyverse)
 library(RColorBrewer)
 library(ggpointdensity)
 library(viridis)
+library(lme4)
+library(lmerTest)
 
 # load data
 setwd("~/OneDrive - University of Cambridge/MFD_shared/Projects/2023_AnaSilva_SecretBugs/data/")
@@ -79,7 +81,7 @@ state.boxplot = ggplot(perc.mapp, aes(x=variable, y=value, fill=Health.state)) +
     axis.title.y = element_text(size=14),
     axis.title.x = element_blank())
 
-ggarrange(reads.boxplot, state.boxplot, labels=c("a", "b"), font.label=list(size=16), align="h")
+ggarrange(reads.boxplot, state.boxplot, labels=c("A", "B"), font.label=list(size=16), align="h")
 ggsave("figures/mapping_rates.pdf", height=5, width=8)
 
 # list of comparisons to analyse
@@ -103,6 +105,8 @@ for (d in diseases) {
   rates.filt = sample.rates[metadata.filt$Sample,]
   rates.filt$Disease = d
   rates.filt$Health.state = metadata.filt$Health.state
+  rates.filt$Study = metadata.filt$Study
+  rates.filt$Subject = metadata.filt$Subject
   disease.data[[d]] = rates.filt
 }
 
@@ -179,3 +183,41 @@ wilcox.abund = all.data %>%
   )
 wilcox.abund$FDR = p.adjust(wilcox.abund$wilcox_p)
 wilcox.abund = wilcox.abund[which(wilcox.abund$FDR < 0.05),]
+
+# repeat with glm (more robust)
+uncult_comp = function(div.combined) {
+  disease.test = lapply(unique(div.combined$Disease), function(x) {
+    sub_data = div.combined[div.combined$Disease == x, ]
+    studies = length(unique(sub_data$Study))
+    subjects = max(table(sub_data$Subject))
+    
+    if (subjects > 1) {
+      # Use mixed-effects model with Subject as a random effect
+      if (studies > 1) {
+        model = lmer(Mapping_norm ~ Health.state + Study + log10(Reads_count) + (1 | Subject), data = sub_data)
+      } else {
+        model = lmer(Mapping_norm ~ Health.state + log10(Reads_count) + (1 | Subject), data = sub_data)
+      }
+      p_val = summary(model)$coefficients["Health.stateHealthy", "Pr(>|t|)"]
+    } else {
+      # Use linear model without random effect
+      if (studies > 1) {
+        model = lm(Mapping_norm ~ Health.state + Study + log10(Reads_count), data = sub_data)
+      } else {
+        model = lm(Mapping_norm ~ Health.state + log10(Reads_count), data = sub_data)
+      }
+      p_val = summary(model)$coefficients["Health.stateHealthy", "Pr(>|t|)"]
+    }
+    
+    return(p_val)
+  })
+  
+  # Format results
+  disease.test = data.frame(t(data.frame(disease.test)))
+  rownames(disease.test) = unique(div.combined$Disease)
+  disease.test$FDR = p.adjust(disease.test[,1], method="fdr")
+  disease.test$Sign = ifelse(disease.test$FDR < 0.05, "Significant", "NS")
+  return(disease.test)
+}
+
+sign_uncultured = uncult_comp(all.data)

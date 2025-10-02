@@ -65,5 +65,5 @@ gen.plot = ggplot(uncult.prev, aes(x=reorder(Label, -Prevalence), y=Prevalence, 
 
 # combine plots
 source("../scripts/alex/mapping_rates.R")
-ggarrange(gen.plot, uncult.plot, nrow=2, labels=c("a", "b"), font.label=list(size=16))
+ggarrange(gen.plot, uncult.plot, nrow=2, labels=c("A", "B"), font.label=list(size=16))
 ggsave(file="../../figures/top-prev_uncult.pdf", width=10, height=10)

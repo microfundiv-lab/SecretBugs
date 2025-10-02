@@ -52,7 +52,7 @@ pf.delta.agg = aggregate(AUC ~ Dataset + Disease, data=pf.delta, FUN=median)
 pf.delta.agg$Delta = ave(as.numeric(pf.delta.agg$AUC), factor(pf.delta.agg$Disease), FUN=function(x) c(NA,diff(x)))
 pf.delta.agg = pf.delta.agg[!is.na(pf.delta.agg$Delta),]
 
-# get stats per disease
+# perform stats
 gtype.stats = pf.delta %>%
   group_by(Disease) %>%
   summarise(
@@ -74,13 +74,13 @@ gtype.stats = pf.delta %>%
 gtype.stats$FDR = p.adjust(gtype.stats$p_value, method="BH")
 gtype.stats$Final_result = ifelse(gtype.stats$FDR < 0.05, "Significant", "Non-significant")
 
-# boxplot both per disease
-pf.both.gb = pf.combined[which(pf.combined$Dataset == "Uncultured" & pf.combined$method == order.method[1]),]
-pf.both.gb.agg = aggregate(AUC ~ Disease, data=pf.both.gb, FUN=median)
-disease.order = pf.both.gb.agg[order(pf.both.gb.agg$AUC, decreasing=FALSE),"Disease"]
-box.disease = ggplot(pf.both.gb, aes(x=Disease, y = AUC)) +
+# boxplot uncultured per disease
+pf.uncult.rr = pf.combined[which(pf.combined$Dataset == "Uncultured" & pf.combined$method == order.method[1]),]
+pf.uncult.rr.agg = aggregate(AUC ~ Disease, data=pf.uncult.rr, FUN=median)
+disease.order = pf.uncult.rr.agg[order(pf.uncult.rr.agg$AUC, decreasing=FALSE),"Disease"]
+box.disease = ggplot(pf.uncult.rr, aes(x=Disease, y = AUC)) +
   geom_point(alpha=0.5, size=0.8, position = position_jitter(width=0.1)) +
-  geom_boxplot(alpha=0.5, outlier.colour=NA, width=0.7, fill="steelblue") +
+  geom_boxplot(alpha=0.5, outlier.colour=NA, width=0.7, fill="darkgreen") +
   coord_flip() +
   ylab("AUROC") +
   scale_x_discrete(limits=disease.order) +
@@ -92,22 +92,30 @@ box.disease = ggplot(pf.both.gb, aes(x=Disease, y = AUC)) +
   theme(axis.text.y = element_text(size=12))
 
 # bar plot delta uncultured
-bar.delta = ggplot(pf.delta.agg, aes(x=Disease, y = Delta)) +
-  geom_bar(stat="identity", alpha=0.5, fill="steelblue") +
+pf.delta.agg$Diff_class = ifelse(pf.delta.agg$Delta > 0, "Higher with uncultured only", "Higher with cultured only")
+bar.delta = ggplot(pf.delta.agg, aes(x=Disease, y = Delta, fill=Diff_class)) +
+  geom_bar(stat="identity", alpha=0.5) +
   ylab(expression(Delta~"AUROC (uncultured - cultured)")) +
   coord_flip() +
   scale_x_discrete(limits=disease.order) +
+  scale_fill_manual(values=c("steelblue", "darkgreen"), name="AUROC difference") +
   scale_y_continuous(breaks=c(-0.1,-0.05,0,0.05,0.1), limits=c(-0.12,0.05)) +
   theme_classic() +
+  theme(legend.position = "none") +
   theme(axis.title.x = element_text(size=14)) +
   theme(axis.title.y = element_blank()) +
   theme(axis.text.x = element_text(size=12)) +
   theme(axis.text.y = element_blank())
 
-# combine plots
+# combine plots and save
+source("../../../scripts/alex/ml_summary_pool-study_both-vs-cult.R")
+comb.delta = ggarrange(box.disease, bar.delta, both.delta, widths=c(1,0.5,0.5), ncol=3, align="h", labels=c("A", "", ""), font.label=list(size=18))
+
 source("../../../scripts/alex/ml_summary_cross-vs-pool.R")
-ml.combined = ggarrange(box.disease, bar.delta, scatter.auc, widths=c(1,0.5,0.8), ncol=3, align="h", labels=c("a", "", "b"), font.label=list(size=18)) +
-  theme(plot.margin = margin(0.2,1,0.2,0.2, "cm"))
+perdisease.combined = ggarrange(box.disease, bar.delta, both.delta, scatter.auc, widths=c(0.9,0.5,0.5,0.6), ncol=4, align="h", labels=c("A", "", "", "B"), font.label=list(size=18))
+
 source("../../scripts/alex/ml_summary_pairwise.R")
-ggarrange(ml.combined, ml.heat, nrow=2, labels=c("", "c"), font.label=list(size=18), heights=c(0.8,1))
-ggsave(file="../../figures/ml_summary.pdf", width=14, height=12)
+source("../../../scripts/alex/ml_summary_pairwise_cult-vs-all.R")
+crossdisease.combined = ggarrange(ml.heat, bar.class, ncol=2, labels=c("C", "D"), font.label=list(size=18), widths=c(1,0.25))
+ggarrange(perdisease.combined, crossdisease.combined, nrow=2, heights=c(0.8,1))
+ggsave(file="../../figures/ml_summary.pdf", width=15, height=13)
