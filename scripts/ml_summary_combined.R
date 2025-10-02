@@ -116,6 +116,6 @@ perdisease.combined = ggarrange(box.disease, bar.delta, both.delta, scatter.auc,
 
 source("../../scripts/alex/ml_summary_pairwise.R")
 source("../../../scripts/alex/ml_summary_pairwise_cult-vs-all.R")
-crossdisease.combined = ggarrange(ml.heat, bar.class, ncol=2, labels=c("C", "D"), font.label=list(size=18), widths=c(1,0.25))
+crossdisease.combined = ggarrange(ml.heat, bar.class, ncol=2, labels=c("C", "D"), align="h", font.label=list(size=18), widths=c(1,0.25))
 ggarrange(perdisease.combined, crossdisease.combined, nrow=2, heights=c(0.8,1))
-ggsave(file="../../figures/ml_summary.pdf", width=15, height=13)
+ggsave(file="../../figures/ml_summary.pdf", height=13, width=15)
