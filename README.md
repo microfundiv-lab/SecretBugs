@@ -15,7 +15,7 @@ The `scripts/` folder contains R scripts that were used to process downstream re
 * [metadata_combined.R](scripts/metadata_combined.R)
 * [metadata_disease-numbers.R](scripts/metadata_disease-numbers.R)
 
-### Diversity analysis
+### Prevalence and diversity analysis
 * [alpha-div_plot.R](scripts/alpha-div_plot.R)
 * [alpha-div_rscl.R](scripts/alpha-div_rscl.R)
 * [mapping_rates.R](scripts/mapping_rates.R)
@@ -44,7 +44,7 @@ The `scripts/` folder contains R scripts that were used to process downstream re
 * [upset_health-disease_species.R](scripts/upset_health-disease_species.R)
 * [cag17_prev-abund.R](scripts/cag17_prev-abund.R)
 
-### Network analysis in health
+### Global network analysis in health
 * [healthy_hub-centr.R](scripts/healthy_hub-centr.R)
 * [healthy_hub-centr_strict.R](scripts/healthy_hub-centr_strict.R)
 * [healthy_hub-centr_tax-status.R](scripts/healthy_hub-centr_tax-status.R)
@@ -52,9 +52,8 @@ The `scripts/` folder contains R scripts that were used to process downstream re
 * [healthy_prev-hub_corr.R](scripts/healthy_prev-hub_corr.R)
 * [healthy_prev-hub_heatmaps.R](scripts/healthy_prev-hub_heatmaps.R)
 
-### Functional comparisons
+### CAG-170 functional comparison
 * [ko_glmer_oscillo_genomes.R](scripts/ko_glmer_oscillo_genomes.R)
-* [ko_glm_species-disease.R](scripts/ko_glm_species-disease.R)
 
 ### HMP2-IBD analyses
 * [hmp2_cag170-dysb.R](scripts/hmp2_cag170-dysb.R)
