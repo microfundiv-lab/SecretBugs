@@ -76,8 +76,8 @@ prev.plot = ggplot(cag170.prev.filt, aes(x=week_num, y=CAG170_prev*100, colour=H
   theme(axis.text = element_text(size=12))
 
 # combine plots
-ggarrange(prev.plot, abund.plot, ncol=1)
-ggsave(file = "~/Desktop/cag170_longitudinal.pdf", height=6, width=8)
+ggarrange(prev.plot, abund.plot, ncol=1, labels=c("A", "B"), font.label = list(size=16), common.legend = TRUE)
+ggsave(file = "../figures/cag170_longitudinal.pdf", height=6, width=8)
 
 # calculate corr
 prev.health = cag170.prev.filt[which(cag170.prev.filt$Health.state == "Healthy"),]
