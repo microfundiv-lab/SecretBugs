@@ -26,7 +26,7 @@ disease.df$Classification = ifelse(disease.df$DS < 0, "Health", "Disease")
 disease.df = disease.df[,c("Species_rep", "Classification")]
 colnames(disease.df)[2] = "Variable"
 
-# process key/core data
+# process hub/core data
 central = read.delim("healthy_analysis/central_mean.tsv")
 central = central[,c("Species_rep", "mean_centrality", "Status")]
 prevalence = read.delim("healthy_analysis/prevalence_mean.tsv")
@@ -36,7 +36,7 @@ rownames(key.core) = key.core$Species_rep
 key_thresh = quantile(key.core$mean_centrality, 0.99, na.rm=TRUE)
 core_thresh = quantile(key.core$mean_prevalence, 0.99, na.rm=TRUE)
 
-# keystonness vs prevalence
+# centrality vs prevalence
 corr = cor.test(key.core$mean_prevalence, key.core$mean_centrality, method = "spearman", exact=TRUE)
 scatter.corr = ggplot(key.core, aes(x=mean_prevalence, y=mean_centrality, colour=Status)) +
   geom_point_rast(size=1, alpha=0.5) +

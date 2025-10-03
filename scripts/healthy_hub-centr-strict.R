@@ -7,7 +7,7 @@ setwd("~/OneDrive - University of Cambridge/MFD_shared/Projects/2023_AnaSilva_Se
 key.data1 = read.delim("centrality_mean_corr01.tsv")
 key.data2 = read.delim("centrality_mean_corr02.tsv")
 
-# filter for keystone
+# filter for hub taxa
 key.data1 = key.data1[which(key.data1$mean_centrality > quantile(key.data1$mean_centrality, 0.99, na.rm=TRUE)),]
 key.data2 = key.data2[which(key.data2$mean_centrality > quantile(key.data2$mean_centrality, 0.99, na.rm=TRUE)),]
 

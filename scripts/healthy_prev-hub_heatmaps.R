@@ -62,6 +62,6 @@ key.plots = heat_bar(key.data, "mean_centrality", "Centrality")
 heat.comb = ggarrange(prev.plots, key.plots, nrow=1, widths=c(1,0.9), labels=c("A", "B"), font.label = list(size=18))
 
 # combine with correlation
-source("../../scripts/alex/healthy_prev-keys_corr.R")
+source("../../scripts/alex/healthy_prev-hub_corr.R")
 ggarrange(heat.comb, corr.comb, ncol=1, heights=c(1,0.8))
 ggsave(file="figures/healthy_analysis.pdf", width=14, height=12)
