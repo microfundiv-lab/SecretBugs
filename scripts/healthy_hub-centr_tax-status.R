@@ -112,7 +112,7 @@ assoc.df = rbind(assoc.pos.df, assoc.neg.df)
 order.hist = ggplot(comb.agg, aes(x=correlation, fill=Order_class)) +
   geom_histogram(alpha=0.9, colour="darkgrey", linewidth=0.2) +
   theme_classic() +
-  xlab("Correlation") +
+  xlab("Effect Size (SparCC correlation)") +
   ylab("Number of species") +
   scale_fill_manual(values=order.colours, name="Order") +
   scale_x_continuous(breaks=c(-0.2,-0.1,0,0.1,0.20,0.30,0.40), limits=c(-0.25,0.45)) +
@@ -134,7 +134,7 @@ order.plot = ggarrange(order.hist, order.bar, widths=c(1,0.3), common.legend=TRU
 status.hist = ggplot(comb.agg, aes(x=correlation, fill=Status)) +
   geom_histogram(alpha=0.6, colour="darkgrey", linewidth=0.2) +
   theme_classic() +
-  xlab("Correlation") +
+  xlab("Effect Size (SparCC correlation)") +
   ylab("Number of species") +
   scale_fill_manual(values=c("steelblue", "darkgreen"), name="Status") +
   scale_x_continuous(breaks=c(-0.2,-0.1,0,0.1,0.20,0.30,0.40), limits=c(-0.25,0.45)) +
@@ -156,7 +156,7 @@ status.plot = ggarrange(status.hist, status.bar, widths=c(1,0.3), common.legend=
 assoc.hist = ggplot(comb.agg, aes(x=correlation, fill=Association)) +
   geom_histogram(alpha=0.6, colour="darkgrey", linewidth=0.2) +
   theme_classic() +
-  xlab("Correlation") +
+  xlab("Effect Size (SparCC correlation)") +
   ylab("Number of species") +
   scale_fill_manual(values=assoc.colours, name="Association") +
   scale_x_continuous(breaks=c(-0.2,-0.1,0,0.1,0.20,0.30,0.40), limits=c(-0.25,0.45)) +
@@ -175,5 +175,5 @@ assoc.bar = ggplot(assoc.df, aes(x=Direction, y=Freq, fill=Var1)) +
 assoc.plot = ggarrange(assoc.hist, assoc.bar, widths=c(1,0.3), common.legend=TRUE, align="h", labels=c("C", ""), font.label = list(size=18))
 
 # final plot and save
-ggarrange(order.plot, status.plot, assoc.plot, ncol=1)
+ggarrange(order.plot, status.plot, assoc.plot, ncol=1, heights=c(1.3,1,1))
 ggsave(filename = "../figures/cag170_correlations.pdf", height=12, width=10)
