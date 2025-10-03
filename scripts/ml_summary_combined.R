@@ -109,13 +109,11 @@ bar.delta = ggplot(pf.delta.agg, aes(x=Disease, y = Delta, fill=Diff_class)) +
 
 # combine plots and save
 source("../../../scripts/alex/ml_summary_pool-study_both-vs-cult.R")
-comb.delta = ggarrange(box.disease, bar.delta, both.delta, widths=c(1,0.5,0.5), ncol=3, align="h", labels=c("A", "", ""), font.label=list(size=18))
-
 source("../../../scripts/alex/ml_summary_cross-vs-pool.R")
-perdisease.combined = ggarrange(box.disease, bar.delta, both.delta, scatter.auc, widths=c(0.9,0.5,0.5,0.6), ncol=4, align="h", labels=c("A", "", "", "B"), font.label=list(size=18))
+perdisease.combined = ggarrange(box.disease, bar.delta, both.delta, scatter.auc, widths=c(0.9,0.5,0.5,0.6), ncol=4, align="h", labels=c("A", "B", "C", "D"), font.label=list(size=18))
 
 source("../../scripts/alex/ml_summary_pairwise.R")
 source("../../../scripts/alex/ml_summary_pairwise_cult-vs-all.R")
-crossdisease.combined = ggarrange(ml.heat, bar.class, ncol=2, labels=c("C", "D"), align="h", font.label=list(size=18), widths=c(1,0.25))
+crossdisease.combined = ggarrange(ml.heat, bar.class, ncol=2, labels=c("E", "F"), align="h", font.label=list(size=18), widths=c(1,0.25))
 ggarrange(perdisease.combined, crossdisease.combined, nrow=2, heights=c(0.8,1))
 ggsave(file="../../figures/ml_summary.pdf", height=13, width=15)

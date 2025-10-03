@@ -58,8 +58,8 @@ scatter.auc = ggplot(pf.combined.agg.long, aes(x=`pool-study`, y = `cross-study`
   geom_point(alpha=1, size=2) +
   geom_text_repel(aes(label = Disease), colour="black") +
   geom_abline(slope=1, intercept=0, linetype="dashed", colour="grey") +
-  ylab("Cross-study (AUROC)") +
-  xlab("Pooled studies (AUROC)") +
+  ylab("AUROC (cross-study)") +
+  xlab("AUROC (pooled studies)") +
   xlim(0.45,1) +
   ylim(0.45,1) +
   theme_classic() +
