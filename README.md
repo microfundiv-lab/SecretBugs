@@ -14,6 +14,7 @@ The `scripts/` folder contains R scripts that were used to process downstream re
 ### Metadata
 * [metadata_combined.R](scripts/metadata_combined.R)
 * [metadata_disease-numbers.R](scripts/metadata_disease-numbers.R)
+* [uhgg_donut.R](scripts/uhgg_donut.R)
 
 ### Prevalence and diversity analysis
 * [alpha-div_plot.R](scripts/alpha-div_plot.R)
