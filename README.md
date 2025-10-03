@@ -57,6 +57,7 @@ The `scripts/` folder contains R scripts that were used to process downstream re
 * [ko_glmer_oscillo_genomes.R](scripts/ko_glmer_oscillo_genomes.R)
 
 ### HMP2-IBD analyses
+* [hmp2_cag170-stability.R](scripts/hmp2_cag170-stability.R)
 * [hmp2_cag170-dysb.R](scripts/hmp2_cag170-dysb.R)
 * [hmp2_cag170-genes_plots.R](scripts/hmp2_cag170-genes_plots.R)
 * [hmp2_cag170-genes.R](scripts/hmp2_cag170-genes.R)
