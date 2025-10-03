@@ -45,7 +45,7 @@ cag170.prev = t(cag170.prev)
 metadata$CAG170_abund = cag170.abund[metadata$Sample,]
 metadata$CAG170_prev = cag170.prev[metadata$Sample,]
 
-# agregate prevalence/abundance by time and health status
+# aggregate prevalence/abundance by time and health status
 keep_weekn = names(which(table(metadata$week_num) > 10))
 
 cag170.prev.agg = aggregate(CAG170_prev ~ week_num + Health.state, data=metadata, FUN = function(x) sum(x) / length(x))
