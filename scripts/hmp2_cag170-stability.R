@@ -54,8 +54,18 @@ cag170.stats = genus_stats("g__CAG-170")
 metadata$CAG170_abund = cag170.stats$genus_abund[metadata$Sample,]
 metadata$CAG170_prev = cag170.stats$genus_prev[metadata$Sample,]
 
+# average duplicate subject + weeks
+metadata = metadata %>%
+  group_by(Subject, week_num) %>%
+  summarise(CAG170_abund = mean(CAG170_abund, na.rm = TRUE),
+            across(everything(), ~ first(.)), .groups = "drop")
+
 # aggregate prevalence/abundance by time and health status
-keep_weekn = names(which(table(metadata$week_num) > 10))
+keep_weekn = names(which(table(metadata$week_num) >= 10))
+
+cag170.prev = aggregate(CAG170_prev ~ Subject, data=metadata, FUN=sum)
+keep_subjects_min1 = cag170.prev[which(cag170.prev$CAG170_prev > 0),"Subject"]
+keep_subjects_min11 = cag170.prev[which(cag170.prev$CAG170_prev > 10),"Subject"]
 
 cag170.prev.agg = aggregate(CAG170_prev ~ week_num + Health.state, data=metadata, FUN = function(x) sum(x) / length(x))
 cag170.abund.agg = aggregate(CAG170_abund ~ week_num + Health.state, data=metadata, FUN = mean)
@@ -63,12 +73,12 @@ cag170.abund.agg = aggregate(CAG170_abund ~ week_num + Health.state, data=metada
 cag170.prev.filt = cag170.prev.agg[which(cag170.prev.agg$week_num %in% keep_weekn),]
 cag170.abund.filt = cag170.abund.agg[which(cag170.abund.agg$week_num %in% keep_weekn),]
 
-# plot
+# time plots
 abund.plot = ggplot(cag170.abund.filt, aes(x=week_num, y=CAG170_abund, colour=Health.state)) +
   geom_point(alpha=0.5) +
   geom_smooth(method="lm") +
   xlab("Week number") +
-  ylab("CAG-170 mean abundance (CLR)") +
+  ylab("CAG-170 abundance (CLR)") +
   scale_colour_manual(values=c("tomato", "steelblue"), name="Health status") +
   theme_classic() +
   theme(axis.title = element_text(size=14)) +
@@ -84,9 +94,9 @@ prev.plot = ggplot(cag170.prev.filt, aes(x=week_num, y=CAG170_prev*100, colour=H
   theme(axis.title = element_text(size=14)) +
   theme(axis.text = element_text(size=12))
 
-group.plot = ggarrange(prev.plot, abund.plot, ncol=1, align="v", labels=c("C", "D"), common.legend = TRUE, font.label=list(size=18))
+group.plot = ggarrange(prev.plot, abund.plot, ncol=1, align="v", labels=c("A", "B"), common.legend = TRUE, font.label=list(size=18))
 
-# calculate corr
+# calculate corrs
 prev.health = cag170.prev.filt[which(cag170.prev.filt$Health.state == "Healthy"),]
 prev.health.corr = cor.test(prev.health$week_num, prev.health$CAG170_prev)
 prev.disease = cag170.prev.filt[which(cag170.prev.filt$Health.state == "Diseased"),]
@@ -98,36 +108,45 @@ abund.disease = cag170.abund.filt[which(cag170.abund.filt$Health.state == "Disea
 abund.disease.corr = cor.test(abund.disease$week_num, abund.disease$CAG170_abund)
 
 # per subject stability
-subject.stab = aggregate(CAG170_abund ~ Subject, data=metadata, FUN=mean)
-subject.stab$cag170_sd = aggregate(CAG170_abund ~ Subject, data=metadata, FUN=sd)[,2]
-subject.stab$Health.state = metadata[match(subject.stab$Subject, metadata$Subject),"Health.state"]
-
 subject.btwn = metadata %>%
   arrange(Subject, week_num) %>% 
   group_by(Subject) %>%
   mutate(abundance_diff = CAG170_abund - lag(CAG170_abund)) %>% ungroup()
 subject.btwn$Health.state = metadata[match(subject.btwn$Subject, metadata$Subject),"Health.state"]
 
-btwn.plot = ggplot(subject.btwn, aes(x=abundance_diff)) +
-  geom_histogram(fill="darkgreen", alpha=0.6) +
+# filter for min CAG-170 prev
+subject.btwn.min1 = subject.btwn[which(subject.btwn$Subject %in% keep_subjects_min1),]
+subject.btwn.min11 = subject.btwn[which(subject.btwn$Subject %in% keep_subjects_min11),]
+
+# build plots
+med1 = median(subject.btwn.min1$abundance_diff, na.rm = TRUE)
+btwn.plot.min1 = ggplot(subject.btwn.min1, aes(x = abundance_diff)) +
+  geom_histogram(fill = "darkgreen", alpha = 0.6) +
   theme_classic() +
   xlab("CAG-170 abundance difference\nbetween consecutive timepoints") +
   ylab("Frequency") +
-  geom_vline(xintercept = median(subject.btwn$abundance_diff, na.rm=TRUE), linetype="dashed") +
-  theme(axis.title = element_text(size=14)) +
-  theme(axis.text = element_text(size=12))
+  geom_vline(xintercept = med1, linetype = "dashed") +
+  annotate("text", x = 1, y = Inf, label = paste0("Median = ", signif(med1, digits=2)), vjust = 1.5, hjust = 0, size = 4.5) +
+  theme(axis.title = element_text(size = 14),
+        axis.text = element_text(size = 12))
 
-hist.plot = ggplot(subject.stab, aes(x=cag170_sd)) +
-  geom_histogram(fill="darkgreen", alpha=0.6) +
+med11 = median(subject.btwn.min11$abundance_diff, na.rm = TRUE)
+btwn.plot.min11 = ggplot(subject.btwn.min11, aes(x = abundance_diff)) +
+  geom_histogram(fill = "darkgreen", alpha = 0.6) +
   theme_classic() +
-  ylab("Number of subjects") +
-  xlab("Standard deviation of CAG-170\nabundances across all timepoints") +
-  geom_vline(xintercept = median(subject.stab$cag170_sd, na.rm=TRUE), linetype="dashed", colour="darkgreen", linewidth=0.7) +
-  theme(axis.title = element_text(size=14)) +
-  theme(axis.text = element_text(size=12))
-
-subject.plot = ggarrange(btwn.plot, hist.plot, ncol=2, align="h", labels=c("A", "B"), font.label=list(size=18))
+  xlab("CAG-170 abundance difference\nbetween consecutive timepoints") +
+  ylab("Frequency") +
+  geom_vline(xintercept = med11, linetype = "dashed") +
+  annotate("text", x = 1, y = Inf, label = paste0("Median = ", signif(med11, digits=2)), vjust = 1.5, hjust = 0, size = 4.5) +
+  theme(axis.title = element_text(size = 14),
+        axis.text = element_text(size = 12))
+subject.plot = ggarrange(btwn.plot.min1, btwn.plot.min11, ncol=2, align="h", labels=c("A", "B"), font.label=list(size=18))
 
 # combine plots and save
-ggarrange(subject.plot, group.plot, ncol=1, align="v", heights=c(0.6,1))
-ggsave("../figures/cag170_stability.pdf", height=10, width=9)
+source("../../scripts/alex/hmp2_cag170-dysb.R")
+ggarrange(group.plot, dysb.comb, ncol=1, align="v", heights=c(1.5,1))
+ggsave(filename = "../figures/cag170_time-dysb.pdf", height=10, width=9)
+
+source("../../scripts/alex/hmp2_cag170-genes_plots.R")
+ggarrange(subject.plot, gene.plot, ncol=1, labels=c("", "C"), heights=c(1,1), font.label=list(size=18))
+ggsave(filename = "../figures/cag170_stab-genes.pdf", height=9, width=10)

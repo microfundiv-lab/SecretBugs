@@ -71,9 +71,3 @@ gene.plot = ggplot(merged.filt, aes(x=log(N_genomes_hq), y=Estimate, colour=Desc
   theme(axis.title = element_text(size=14)) +
   theme(legend.title = element_text(size=12)) +
   theme(legend.text = element_text(size=10))
-
-# combine and save plots
-source("../../scripts/alex/hmp2_cag170-dysb.R")
-ggarrange(dysb.comb, gene.plot, nrow=2, labels=c("", "C"), font.label = list(size=18))
-ggsave(file="../figures/cag170_dysbiosis.pdf", height=9, width=10)
-write.table(merged, file="sign_genes_merged.tsv", sep="\t", quote=FALSE, row.names=FALSE)

@@ -42,24 +42,12 @@ cag.present = colnames(abund.data.agg)[which(abund.data.agg["g__CAG-170",] > 0)]
 abund.data.agg.clr = codaSeq.clr(abund.data.agg + 0.5, samples.by.row = FALSE)
 cag.relab = data.frame(abund.data.agg.clr["g__CAG-170",])
 
-# perform correlation by subject
+# prepare correlation dataset
 corr.select = cag.relab
 corr.select$Dysb = metadata[rownames(corr.select),"Dysb_score"]
 corr.select$Subject = metadata[rownames(corr.select),"Subject"]
 corr.fi = reshape2::melt(corr.select, id.var=c("Dysb", "Subject"))
 corr.fi$Class = ifelse(corr.fi$Dysb > quantile(corr.fi$Dysb, 0.5), "High", "Low")
-corr.subject = lapply(unique(corr.fi$Subject), function(x){
-  test.df = corr.fi[which(corr.fi$Subject == x),]
-  test.res = cor.test(test.df$Dysb, test.df$value)
-  test.res = c(test.res$estimate, test.res$p.value)
-  names(test.res) = c("estimate", "p.value")
-  return(test.res)
-})
-raw.output = data.frame(t(data.frame(corr.subject)))
-rownames(raw.output) = unique(corr.fi$Subject)
-raw.output = raw.output[!is.na(raw.output$estimate),]
-raw.output$FDR = p.adjust(raw.output$p.value)
-sign.output = raw.output[which(raw.output$FDR < 0.05),]
 
 # correlate dysbiosis score for all subjects
 cor_test = lme(value ~ Dysb, random = ~1|Subject, data=corr.fi)
@@ -98,4 +86,4 @@ dysb.boxplot = ggplot(corr.plot, aes(x=Class, y=value, fill=Class)) +
   theme(axis.title.x = element_text(size=14)) +
   theme(axis.text.y = element_text(size=12))
 
-dysb.comb = ggarrange(dysb.scatter, dysb.boxplot, widths=c(2,1), labels=c("A", "B"), font.label = list(size=18))
+dysb.comb = ggarrange(dysb.scatter, dysb.boxplot, widths=c(2,1), labels=c("C", "D"), font.label = list(size=18), align="h")
