@@ -53,11 +53,11 @@ The `scripts/` folder contains R scripts that were used to process downstream re
 * [healthy_prev-hub_corr.R](scripts/healthy_prev-hub_corr.R)
 * [healthy_prev-hub_heatmaps.R](scripts/healthy_prev-hub_heatmaps.R)
 
-### CAG-170 functional comparison
-* [ko_glmer_oscillo_genomes.R](scripts/ko_glmer_oscillo_genomes.R)
-
-### HMP2-IBD analyses
+### Longitudinal analyses
 * [hmp2_cag170-stability.R](scripts/hmp2_cag170-stability.R)
 * [hmp2_cag170-dysb.R](scripts/hmp2_cag170-dysb.R)
 * [hmp2_cag170-genes_glmer.R](scripts/hmp2_cag170-genes_glmer.R)
 * [hmp2_cag170-genes_plots.R](scripts/hmp2_cag170-genes_plots.R)
+
+### CAG-170 functional comparison
+* [ko_glmer_oscillo_genomes.R](scripts/ko_glmer_oscillo_genomes.R)
