@@ -44,10 +44,10 @@ world_merged = left_join(world, ddf, by = c("country"))
 
 # plot map
 map.plot = ggplot(data = world_merged, aes(fill=log10(samples+1))) +
-  geom_sf(alpha = 0.8, color = "grey20", linewidth = 0.05) +
-  scale_fill_gradient2(high="steelblue", name="Number of samples (log10)", na.value="white") +
+  geom_sf(color = "grey20", linewidth = 0.05) +
+  scale_fill_gradient2(low="#CFE8CC", mid="#FFF2B2", high="#f3756b", midpoint = 2, name="Number of samples (log10)", na.value="white") +
   coord_sf(crs = "+proj=merc") +
-  theme(panel.background = element_rect(fill = "grey95", color = "grey95", linewidth = 0.2) , panel.grid = element_blank(), panel.border = element_blank(),
+  theme(panel.background = element_rect(fill = "grey97", color = "grey97", linewidth = 0.2) , panel.grid = element_blank(), panel.border = element_blank(),
         plot.margin = margin(2, 4, 2, 2),
         axis.text = element_blank(), axis.ticks = element_blank(),
         legend.position = "bottom", legend.text = element_text(size=12), legend.title = element_text(size=14))
@@ -55,6 +55,6 @@ map.plot = ggplot(data = world_merged, aes(fill=log10(samples+1))) +
 # save plot
 source("../scripts/alex/metadata_disease-numbers.R")
 source("../scripts/alex/uhgg_donut.R")
-ggarrange(ggarrange(map.plot, cont.heat, common.legend=TRUE, labels=c("A", "B"), legend = "bottom", font.label = list(size=20)), 
+ggarrange(ggarrange(map.plot, cont.heat, labels=c("A", "B"), legend = "bottom", font.label = list(size=20)), 
           ggarrange(meta.plot, donut.plot, widths=c(2.5,1), labels=c("C","D"), font.label = list(size=20)), ncol=1, heights=c(1.5,1))
 ggsave("figures/metadata_combined.pdf", height = 8, width = 12, dpi = 300, bg="white")

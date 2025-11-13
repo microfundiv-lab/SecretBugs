@@ -19,8 +19,6 @@ species.metadata = read.delim("metadata/species_uhgg_v1.2.tsv")
 species.oscillo  = species.metadata[grepl("f__Oscillospiraceae", species.metadata$Lineage), ]
 
 genome.metadata  = read.delim("metadata/genomes-nr_metadata.tsv")
-disease.score    = read.csv("meta-analysis/species_ds.csv")
-rownames(disease.score) = disease.score$Species_rep
 
 # parse taxonomy
 ranks = c("Domain","Phylum","Class","Order","Family","Genus","Species")
@@ -170,3 +168,4 @@ ggsave(file="figures/oscillo_genes.pdf", heigh=5, width=6)
 
 # save output
 write.table(sign.output, file = "oscillo/ko-glmer_results.tsv", sep = "\t", row.names = FALSE, quote = FALSE)
+write.table(selected.genomes, file = "oscillo/selected_genomes.txt", sep = "\t", row.names = FALSE, quote = FALSE, col.names = FALSE)

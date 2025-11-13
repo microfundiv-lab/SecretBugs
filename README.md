@@ -7,6 +7,7 @@ These are the custom workflows that were used in this study. Each individual rep
 * [MetaGen-Fetch - Processing public metagenomes](https://github.com/alexmsalmeida/metagen-fetch)
 * [metaMap - Quantifying genomes in metagenomes](https://github.com/alexmsalmeida/metamap)
 * [ML-Microbiome - Machine learning classification of microbiome data](https://github.com/alexmsalmeida/ml-microbiome)
+* [GenoFan - Genome functional annotation pipeline](https://github.com/alexmsalmeida/genofan)
 
 # Scripts
 The `scripts/` folder contains R scripts that were used to process downstream results and plot figures.
@@ -48,7 +49,8 @@ The `scripts/` folder contains R scripts that were used to process downstream re
 ### Global network analysis in health
 * [healthy_hub-centr.R](scripts/healthy_hub-centr.R)
 * [healthy_hub-centr_strict.R](scripts/healthy_hub-centr_strict.R)
-* [healthy_hub-centr_tax-status.R](scripts/healthy_hub-centr_tax-status.R)
+* [healthy_hub-centr_tax-status_top1.R](scripts/healthy_hub-centr_tax-status_top1.R)
+* [healthy_hub-centr_tax-status_top10.R](scripts/healthy_hub-centr_tax-status_top10.R)
 * [healthy_mean-prev.R](scripts/healthy_mean-prev.R)
 * [healthy_prev-hub_corr.R](scripts/healthy_prev-hub_corr.R)
 * [healthy_prev-hub_heatmaps.R](scripts/healthy_prev-hub_heatmaps.R)
@@ -60,4 +62,8 @@ The `scripts/` folder contains R scripts that were used to process downstream re
 * [hmp2_cag170-genes_plots.R](scripts/hmp2_cag170-genes_plots.R)
 
 ### CAG-170 functional comparison
-* [ko_glmer_oscillo_genomes.R](scripts/ko_glmer_oscillo_genomes.R)
+* [functions_cag-170_b12-corr.R](scripts/functions_cag-170_b12-corr.R)
+* [functions_cag-170_core.R](scripts/functions_cag-170_core.R)
+* [functions_cag-170_vs-cocol_metab.R](scripts/functions_cag-170_vs-cocol_metab.R)
+* [functions_cag-170_vs-cocol_richness.R](scripts/functions_cag-170_vs-cocol_richness.R)
+* [functions_cag-170_vs-oscillo.R](scripts/functions_cag-170_vs-oscillo.R)

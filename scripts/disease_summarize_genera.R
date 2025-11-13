@@ -45,12 +45,12 @@ genus.fi$Family = gsub("f__", "", genus.fi$Family)
 
 # plot genus-level stats
 genus.health = genus.fi[which(genus.fi$UHS < 0),]
-scatter = ggplot(genus.health, aes(x=Prop_uncult, y=Norm_ES, colour=N_class)) +
-  geom_point(size=1.5) +
+scatter = ggplot(genus.health, aes(x=Prop_uncult, y=Norm_ES, size=Significant, colour=Significant)) +
+  geom_point() +
   theme_classic() +
   ylab("Normalized Effect Size") +
   xlab("% Uncultured species") +
-  scale_colour_manual(values=c("steelblue", "darkgreen", "tomato", "purple"), name="Number of species") +
+  scale_colour_gradient(low="lightblue1", high="steelblue4") +
   theme(legend.text = element_text(size=10)) +
   theme(legend.title = element_text(size=12)) +
   theme(legend.position = "inside") +
@@ -78,7 +78,7 @@ lolli = ggplot(genus.health[1:25,], aes(x=reorder(Genus, UHS), y=UHS, fill=Famil
 genus.plot = ggarrange(scatter, lolli, align="h", widths=c(0.8,1), labels=c("A", "B"), font.label=list(size=18))
 
 # plot cag-170 species
-source("../../scripts/alex/cag17_prev-abund.R")
+source("../../scripts/alex/cag170_prev-abund.R")
 cag170.df = all_overlap_species[which(all_overlap_species$Genus == "g__CAG-170"),c("Genome", "CD", "ME", "Obesity", "UC", "DS", "Taxon")]
 cag170.df$Label = paste(cag170.df$Genome, " (", gsub("s__CAG-170 ","", cag170.df$Taxon), ")", sep="")
 rownames(cag170.df) = cag170.df$Genome
@@ -88,7 +88,7 @@ order.labels = cag170.df[order.genomes, "Label"]
   
 cag170.heat = ggplot(cag170.melt, aes(y = Genome, x = variable, fill = value)) +
   geom_tile(color = "lightgrey", linewidth = 0.4) +
-  geom_text(aes(label = value, fontface = ifelse(variable == "DS", "bold", "plain")), colour = "black") +
+  geom_text(aes(label = ifelse(value == 0, "N.S.", value), fontface = ifelse(variable == "DS", "bold", "plain")), colour = "black") +
   scale_fill_gradient(low = "palegreen4", high = "white", name = "Effect Size") +
   scale_color_manual(values = c("TRUE" = "black", "FALSE" = NA), guide = "none") +  # black only for last col
   theme_minimal() +

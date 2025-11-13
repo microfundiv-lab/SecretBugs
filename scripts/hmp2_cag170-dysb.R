@@ -86,4 +86,6 @@ dysb.boxplot = ggplot(corr.plot, aes(x=Class, y=value, fill=Class)) +
   theme(axis.title.x = element_text(size=14)) +
   theme(axis.text.y = element_text(size=12))
 
-dysb.comb = ggarrange(dysb.scatter, dysb.boxplot, widths=c(2,1), labels=c("C", "D"), font.label = list(size=18), align="h")
+# combine and save
+ggarrange(dysb.scatter, dysb.boxplot, widths=c(2,1), labels=c("A", "B"), font.label = list(size=18), align="h")
+ggsave(filename = "../figures/cag170_hmp2_dysb.pdf", width=8, height=4)

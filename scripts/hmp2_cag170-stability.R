@@ -73,29 +73,6 @@ cag170.abund.agg = aggregate(CAG170_abund ~ week_num + Health.state, data=metada
 cag170.prev.filt = cag170.prev.agg[which(cag170.prev.agg$week_num %in% keep_weekn),]
 cag170.abund.filt = cag170.abund.agg[which(cag170.abund.agg$week_num %in% keep_weekn),]
 
-# time plots
-abund.plot = ggplot(cag170.abund.filt, aes(x=week_num, y=CAG170_abund, colour=Health.state)) +
-  geom_point(alpha=0.5) +
-  geom_smooth(method="lm") +
-  xlab("Week number") +
-  ylab("CAG-170 abundance (CLR)") +
-  scale_colour_manual(values=c("tomato", "steelblue"), name="Health status") +
-  theme_classic() +
-  theme(axis.title = element_text(size=14)) +
-  theme(axis.text = element_text(size=12))
-
-prev.plot = ggplot(cag170.prev.filt, aes(x=week_num, y=CAG170_prev*100, colour=Health.state)) +
-  geom_point(alpha=0.5) +
-  geom_smooth(method="lm") +
-  xlab("Week number") +
-  ylab("CAG-170 prevalence (%)") +
-  scale_colour_manual(values=c("tomato", "steelblue"), name="Health status") +
-  theme_classic() +
-  theme(axis.title = element_text(size=14)) +
-  theme(axis.text = element_text(size=12))
-
-group.plot = ggarrange(prev.plot, abund.plot, ncol=1, align="v", labels=c("A", "B"), common.legend = TRUE, font.label=list(size=18))
-
 # calculate corrs
 prev.health = cag170.prev.filt[which(cag170.prev.filt$Health.state == "Healthy"),]
 prev.health.corr = cor.test(prev.health$week_num, prev.health$CAG170_prev)
@@ -143,10 +120,6 @@ btwn.plot.min11 = ggplot(subject.btwn.min11, aes(x = abundance_diff)) +
 subject.plot = ggarrange(btwn.plot.min1, btwn.plot.min11, ncol=2, align="h", labels=c("A", "B"), font.label=list(size=18))
 
 # combine plots and save
-source("../../scripts/alex/hmp2_cag170-dysb.R")
-ggarrange(group.plot, dysb.comb, ncol=1, align="v", heights=c(1.5,1))
-ggsave(filename = "../figures/cag170_time-dysb.pdf", height=10, width=9)
-
 source("../../scripts/alex/hmp2_cag170-genes_plots.R")
 ggarrange(subject.plot, gene.plot, ncol=1, labels=c("", "C"), heights=c(1,1), font.label=list(size=18))
 ggsave(filename = "../figures/cag170_stab-genes.pdf", height=9, width=10)

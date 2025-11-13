@@ -124,8 +124,8 @@ fit_data <- Maaslin2(
   input_data = abund_data_ready, 
   input_metadata = metadata_ready,
   output = outfile,
-  fixed_effects = c(fixed) # variables that we want to study
+  fixed_effects = c(fixed), # variables that we want to study
   reference = c("Disease_name,a_Healthy", paste0("Age_group,",age.group_ref), paste0("Continent,",continent_ref), paste0("Study,",study_ref)),
-  random_effects = c(random)
+  random_effects = c(random),
   plot_heatmap = FALSE,
   plot_scatter = FALSE)

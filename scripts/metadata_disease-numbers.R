@@ -56,12 +56,13 @@ names(disease.counts) = disease.df$Name
 
 # plot heatmap
 disease.cont.melt = reshape2::melt(as.matrix(log10(disease.cont+1)))
+disease.cont.melt[disease.cont.melt == 0] = NA
 cont.heat = ggplot(disease.cont.melt, aes(x=Var2, y=Var1, fill=value)) +
   geom_tile() +
   theme_classic() +
-  scale_fill_gradient2(high="steelblue", name="Number of samples (log10)") +
+  scale_fill_gradient2(low="#CFE8CC", mid="#FFF2B2", high="#f3756b", midpoint = 2.5, na.value = "white", name="Number of samples (log10)") +
   scale_y_discrete(limits = rev(levels(disease.cont.melt$Var1))) +
-  theme(legend.position = "top") +
+  theme(legend.position = "top", legend.text = element_text(size=12), legend.title = element_text(size=14)) +
   theme(axis.text.x = element_text(size=12, angle=45, vjust=1, hjust=1)) +
   theme(axis.text.y = element_text(size=12)) +
   theme(axis.title = element_blank())
@@ -69,16 +70,23 @@ cont.heat = ggplot(disease.cont.melt, aes(x=Var2, y=Var1, fill=value)) +
 # plot barplot
 disease.order = names(sort(rowSums(disease.df[,c("Healthy", "Diseased")]), decreasing=TRUE))
 disease.df.melt = reshape2::melt(as.matrix(disease.df[,c("Healthy", "Diseased")]))
-meta.plot = ggplot(disease.df.melt, aes(x=Var1, y=log10(value), fill=Var2)) +
-  geom_bar(stat="identity", alpha=0.85, width=0.5, position="dodge") +
-  theme_classic() +
-  scale_x_discrete(limits=disease.order) +
-  scale_fill_manual(values=c("steelblue", "tomato"), name="Sample type") +
-  ylab("log10(Number of samples)") +
-  theme(axis.title.x = element_blank()) +
-  theme(axis.title.y = element_text(size=14)) +
-  theme(axis.text.x = element_text(size=12, angle=45, hjust=1)) +
-  theme(axis.text.y = element_text(size=12))
+meta.plot = ggplot(disease.df.melt, aes(x = Var1, y = Var2)) +
+  geom_point(aes(size = value, fill = Var2), shape = 21, color = "white",
+             alpha = 0.75, stroke = 0.5) +
+  geom_text(aes(label = round(value, 2)),
+            size = 3.2, color = "black", nudge_y = 0.4) +  # adjust nudge_y to taste
+  scale_size_area(max_size = 18, guide = "none") +     # area ∝ value
+  scale_x_discrete(limits = disease.order) +
+  scale_fill_manual(values = c("steelblue", "tomato"), name = "") +
+  coord_equal() +                                       # keep circles circular
+  theme_minimal() +
+  ylab("") + xlab(NULL) +
+  theme(
+    axis.title.y = element_text(size = 14),
+    axis.text.x  = element_text(size = 12, angle = 45, hjust = 1),
+    axis.text.y  = element_text(size = 12),
+    legend.position = "none"
+  )
 ggsave(file="figures/metadata_disease-numbers.png", height=4, width=10, dpi=100)
 
 # count by disease group

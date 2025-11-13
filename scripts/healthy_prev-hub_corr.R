@@ -31,16 +31,19 @@ central = read.delim("healthy_analysis/central_mean.tsv")
 central = central[,c("Species_rep", "mean_centrality", "Status")]
 prevalence = read.delim("healthy_analysis/prevalence_mean.tsv")
 prevalence = prevalence[,c("Species_rep", "mean_prevalence")]
-key.core = merge(central, prevalence, by="Species_rep")
-rownames(key.core) = key.core$Species_rep
-key_thresh = quantile(key.core$mean_centrality, 0.99, na.rm=TRUE)
-core_thresh = quantile(key.core$mean_prevalence, 0.99, na.rm=TRUE)
+hub.core = merge(central, prevalence, by="Species_rep")
+rownames(hub.core) = hub.core$Species_rep
+hub_thresh = quantile(hub.core$mean_centrality, 0.99, na.rm=TRUE)
+core_thresh = quantile(hub.core$mean_prevalence, 0.99, na.rm=TRUE)
 
 # centrality vs prevalence
-corr = cor.test(key.core$mean_prevalence, key.core$mean_centrality, method = "spearman", exact=TRUE)
-scatter.corr = ggplot(key.core, aes(x=mean_prevalence, y=mean_centrality, colour=Status)) +
+hub.min30 = hub.core[which(hub.core$mean_prevalence > 30),]
+corr = cor.test(hub.core$mean_prevalence, hub.core$mean_centrality, method = "spearman", exact=TRUE)
+corr_min30 = cor.test(hub.min30$mean_prevalence, hub.min30$mean_centrality, method = "spearman", exact=TRUE)
+
+scatter.corr = ggplot(hub.core, aes(x=mean_prevalence, y=mean_centrality, colour=Status)) +
   geom_point_rast(size=1, alpha=0.5) +
-  geom_hline(yintercept = key_thresh, linetype = "dashed") +
+  geom_hline(yintercept = hub_thresh, linetype = "dashed") +
   geom_vline(xintercept = core_thresh, linetype = "dashed") +
   theme_classic() +
   scale_colour_manual(values=c("steelblue", "palegreen4")) +
@@ -54,18 +57,18 @@ scatter.corr = ggplot(key.core, aes(x=mean_prevalence, y=mean_centrality, colour
   theme(legend.text = element_text(size=10))
 
 # define central and core
-key.core = key.core[which(key.core$mean_prevalence != 0 | !is.na(key.core$mean_centrality)),]
-key.core$Hub_class = ifelse(key.core$mean_centrality > key_thresh, "Network hub", NA)
-key.core$Core_class = ifelse(key.core$mean_prevalence > core_thresh, "Core", NA)
-key.df = key.core[,c("Species_rep", "Hub_class")]
-key.df = key.df[which(!is.na(key.df$Hub_class)),]
-colnames(key.df)[2] = "Variable"
-core.df = key.core[,c("Species_rep", "Core_class")]
+hub.core = hub.core[which(hub.core$mean_prevalence != 0 | !is.na(hub.core$mean_centrality)),]
+hub.core$Hub_class = ifelse(hub.core$mean_centrality > hub_thresh, "Network hub", NA)
+hub.core$Core_class = ifelse(hub.core$mean_prevalence > core_thresh, "Core", NA)
+hub.df = hub.core[,c("Species_rep", "Hub_class")]
+hub.df = hub.df[which(!is.na(hub.df$Hub_class)),]
+colnames(hub.df)[2] = "Variable"
+core.df = hub.core[,c("Species_rep", "Core_class")]
 core.df = core.df[which(!is.na(core.df$Core_class)),]
 colnames(core.df)[2] = "Variable"
 
 # merge data
-all.long = rbind(disease.df, key.df, core.df)
+all.long = rbind(disease.df, hub.df, core.df)
 all.matrix = acast(Species_rep ~ Variable, data=all.long, fun.aggregate=length)
 all.matrix.meta = merge(all.matrix, species.data, by="row.names")
 rownames(all.matrix.meta) = all.matrix.meta$Species_rep

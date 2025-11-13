@@ -86,8 +86,8 @@ assoc.colours = c("steelblue", "tomato", "darkgrey")
 names(assoc.colours) = c("Health", "Disease", "Non-significant")
 
 # create df of props
-pos_thresh = quantile(comb.agg$correlation, 0.90)
-neg_thresh = quantile(comb.agg$correlation, 0.1)
+pos_thresh = quantile(comb.agg$correlation, 0.99)
+neg_thresh = quantile(comb.agg$correlation, 0.01)
 
 order.pos.df = as.data.frame(table(comb.agg[which(comb.agg$correlation > pos_thresh),"Order_class"])/length(comb.agg[which(comb.agg$correlation > pos_thresh),"Order_class"])*100)
 order.pos.df$Direction = "Positive"
@@ -174,6 +174,12 @@ assoc.bar = ggplot(assoc.df, aes(x=Direction, y=Freq, fill=Var1)) +
 
 assoc.plot = ggarrange(assoc.hist, assoc.bar, widths=c(1,0.3), common.legend=TRUE, align="h", labels=c("C", ""), font.label = list(size=18))
 
-# final plot and save
+# final plot and save files
 ggarrange(order.plot, status.plot, assoc.plot, ncol=1, heights=c(1.3,1,1))
 ggsave(filename = "../figures/cag170_correlations.pdf", height=12, width=10)
+
+top.pos = unique(comb.agg[which(comb.agg$correlation > pos_thresh),"neighbour"])
+write.table(top.pos, file="top-pos-1_cag-170.txt", row.names=FALSE, col.names=FALSE, quote=FALSE)
+
+top.neg = unique(comb.agg[which(comb.agg$correlation < neg_thresh),"neighbour"])
+write.table(top.neg, file="top-neg-1_cag-170.txt", row.names=FALSE, col.names=FALSE, quote=FALSE)

@@ -22,6 +22,10 @@ common.samples = intersect(rownames(df), rownames(metadata))
 df = as.data.frame(df[common.samples, ])
 df[df > 0] = 1
 rownames(df) = metadata[rownames(df), "Sample"]
+
+# filter based on prevalence
+samples = names(which(rowSums(df) > 0))
+df = df[samples,]
 genes = names(which(colSums(df) > nrow(df)*0.01))
 
 # fit glmm

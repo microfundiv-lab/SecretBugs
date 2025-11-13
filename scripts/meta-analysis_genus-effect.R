@@ -51,12 +51,12 @@ genus.fi$Family = gsub("f__", "", genus.fi$Family)
 
 # plot genus stats
 genus.health = genus.fi[which(genus.fi$UHS < 0),]
-scatter = ggplot(genus.health, aes(x=Prop_uncult, y=Norm_ES, colour=N_class)) +
-  geom_point(size=1.5) +
+scatter = ggplot(genus.health, aes(x=Prop_uncult, y=Norm_ES, size=Significant, colour=Significant)) +
+  geom_point() +
   theme_classic() +
   ylab("Normalized Effect Size") +
   xlab("% Uncultured species") +
-  scale_colour_manual(values=c("steelblue", "darkgreen", "tomato", "purple"), name="Number of biomarkers") +
+  scale_colour_gradient(low="lightblue1", high="steelblue4") +
   theme(legend.text = element_text(size=10)) +
   theme(legend.title = element_text(size=12)) +
   theme(legend.position = "inside") +
