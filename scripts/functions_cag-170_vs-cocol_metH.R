@@ -37,4 +37,4 @@ metH.fi = merge(metH, genome.oscillo, by="row.names")
 # Chi-Sq test
 fisher.df = table(metH.fi[,c("K00548", "Classification")])
 rownames(fisher.df) = c("Absent", "Present")
-res = fisher.test(chisq.df)
+res = fisher.test(fisher.df)
