@@ -61,28 +61,9 @@ metadata = metadata %>%
             across(everything(), ~ first(.)), .groups = "drop")
 
 # aggregate prevalence/abundance by time and health status
-keep_weekn = names(which(table(metadata$week_num) >= 10))
-
 cag170.prev = aggregate(CAG170_prev ~ Subject, data=metadata, FUN=sum)
 keep_subjects_min1 = cag170.prev[which(cag170.prev$CAG170_prev > 0),"Subject"]
 keep_subjects_min11 = cag170.prev[which(cag170.prev$CAG170_prev > 10),"Subject"]
-
-cag170.prev.agg = aggregate(CAG170_prev ~ week_num + Health.state, data=metadata, FUN = function(x) sum(x) / length(x))
-cag170.abund.agg = aggregate(CAG170_abund ~ week_num + Health.state, data=metadata, FUN = mean)
-
-cag170.prev.filt = cag170.prev.agg[which(cag170.prev.agg$week_num %in% keep_weekn),]
-cag170.abund.filt = cag170.abund.agg[which(cag170.abund.agg$week_num %in% keep_weekn),]
-
-# calculate corrs
-prev.health = cag170.prev.filt[which(cag170.prev.filt$Health.state == "Healthy"),]
-prev.health.corr = cor.test(prev.health$week_num, prev.health$CAG170_prev)
-prev.disease = cag170.prev.filt[which(cag170.prev.filt$Health.state == "Diseased"),]
-prev.disease.corr = cor.test(prev.disease$week_num, prev.disease$CAG170_prev)
-
-abund.health = cag170.abund.filt[which(cag170.abund.filt$Health.state == "Healthy"),]
-abund.health.corr = cor.test(abund.health$week_num, abund.health$CAG170_abund)
-abund.disease = cag170.abund.filt[which(cag170.abund.filt$Health.state == "Diseased"),]
-abund.disease.corr = cor.test(abund.disease$week_num, abund.disease$CAG170_abund)
 
 # per subject stability
 subject.btwn = metadata %>%
