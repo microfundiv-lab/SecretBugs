@@ -36,25 +36,28 @@ genome.oscillo   = genome.oscillo[selected.genomes, , drop = FALSE]
 keggor.matrix    = keggor.matrix[, selected.genomes, drop = FALSE]
 keggor.matrix = keggor.matrix[rowSums(keggor.matrix > 0) > ncol(keggor.matrix) * 0.01, , drop = FALSE]
 
-# calculate KO distances
-ko.dist = as.matrix(vegdist(keggor.matrix, method="jaccard"))
+# convert to binary presence/absence (0/1)
+keggor.matrix[keggor.matrix > 0] = 1
+
+# calculate phi coefficients between genes
+ko.phi = cor(t(keggor.matrix), method = "pearson", use = "pairwise.complete.obs")
 
 # extract B12 KOs
 b12.kos = scan("oscillo/B12_KOs.txt", what="")
-b12.dist = ko.dist[b12.kos,setdiff(colnames(ko.dist), b12.kos)]
+b12.dist = ko.phi[b12.kos,setdiff(colnames(ko.phi), b12.kos)]
 
 # histogram
 ko.freq = data.frame(rowSums(keggor.matrix > 0))
 b12.means = data.frame(colMeans(b12.dist))
 b12.fi = merge(b12.means, ko.freq, by="row.names")
-colnames(b12.fi) = c("KO", "Mean_dist", "Frequency")
+colnames(b12.fi) = c("KO", "Mean_corr", "Frequency")
 b12.fi$Prop = b12.fi$Frequency/ncol(keggor.matrix)
 b12.fi$Classification = ifelse(b12.fi$Prop > 0.9, "Core", "Accessory")
-b12.hist = ggplot(b12.fi, aes(x=Mean_dist, fill=Classification)) +
-  geom_histogram(colour="grey40", alpha=0.7, bins=50, linewidth=0.1) +
+b12.hist = ggplot(b12.fi, aes(x=Mean_corr)) +
+  geom_histogram(colour="grey40", alpha=0.7, bins=50, linewidth=0.1, fill="steelblue") +
   theme_classic() +
   ylab("Number of KOs") +
-  xlab("Average Jaccard distance to B12 biosynthesis KOs") +
+  xlab("Mean phi correlation coefficient with B12 biosynthesis KOs") +
   theme(axis.text = element_text(size=12)) +
   theme(axis.title = element_text(size=14))
-ggsave(filename = "figures/cag170_b12_corr.pdf", width=9, height=3)
+ggsave(filename = "figures/cag170_b12_corr.pdf", width=7, height=3)
