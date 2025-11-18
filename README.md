@@ -66,5 +66,5 @@ The `scripts/` folder contains R scripts that were used to process downstream re
 * [functions_cag-170_core.R](scripts/functions_cag-170_core.R)
 * [functions_cag-170_vs-cocol_metab.R](scripts/functions_cag-170_vs-cocol_metab.R)
 * [functions_cag-170_vs-cocol_richness.R](scripts/functions_cag-170_vs-cocol_richness.R)
-* [functions_cag-170_vs-cocol_metH.R](scripts/functions_cag-170_vs-cocol_metH.R)
+* [functions_cag-170_vs-cocol_mut-metH.R](scripts/functions_cag-170_vs-cocol_mut-metH.R)
 * [functions_cag-170_vs-oscillo.R](scripts/functions_cag-170_vs-oscillo.R)

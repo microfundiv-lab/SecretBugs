@@ -28,13 +28,14 @@ keggor.df$V1 = gsub("_\\d+$", "", keggor.df$V1)
 keggor.matrix = data.frame(acast(keggor.df, V2 ~ V1, length))
 
 # filter dataset
+ko = "K01847" # mut = K01847; metH = K00548
 selected.genomes = intersect(colnames(keggor.matrix), rownames(genome.selected))
 genome.oscillo   = genome.selected[selected.genomes, , drop = FALSE]
 keggor.matrix    = keggor.matrix[, selected.genomes, drop = FALSE]
-metH = data.frame(t(keggor.matrix["K00548",]))
+metH = data.frame(t(keggor.matrix[ko,]))
 metH.fi = merge(metH, genome.oscillo, by="row.names")
 
 # Chi-Sq test
-fisher.df = table(metH.fi[,c("K00548", "Classification")])
+fisher.df = table(metH.fi[,c(ko, "Classification")])
 rownames(fisher.df) = c("Absent", "Present")
 res = fisher.test(fisher.df)
